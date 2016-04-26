@@ -1,0 +1,30 @@
+{
+  "name": "oddcast-tcp-transport",
+  "version": "0.1.0",
+  "description": "A full featured TCP transport for Oddcast.",
+  "author": "Odd Networks Inc. (http://oddnetworks.co)",
+  "main": "./lib/oddcast-tcp-transport",
+  "scripts": {
+    "lint": "xo",
+    "test": "xo && tape 'test/**/*.test.js' | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oddnetworks/oddcast-tcp-transport.git"
+  },
+  "homepage": "https://github.com/oddnetworks/oddcast-tcp-transport/",
+  "dependencies": {
+    "bluebird": "~3.1.1",
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {
+    "oddcast": "^2.0.0",
+    "sinon": "~1.17.2",
+    "tape": "~4.4.0",
+    "xo": "~0.12.1"
+  },
+  "bugs": {
+    "url": "https://github.com/oddnetworks/oddcast-tcp-transport/issues"
+  },
+  "license": "MIT"
+}

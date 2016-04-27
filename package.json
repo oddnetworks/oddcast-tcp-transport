@@ -1,6 +1,6 @@
 {
   "name": "oddcast-tcp-transport",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A full featured TCP transport for Oddcast.",
   "author": "Odd Networks Inc. (http://oddnetworks.co)",
   "main": "./lib/oddcast-tcp-transport",

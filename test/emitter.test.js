@@ -24,13 +24,12 @@ const response = {val: 'TCP-Response'};
 	test('before all sendWithNoError', function (t) {
 		subject.on('message:sent', messageSentHandler);
 		subject.on('error', errorHandler);
-		subject.setHandler(responseHandler);
 
 		subject.on('client:connect', function () {
 			subject.write({
 				pattern: pattern,
 				payload: payload
-			});
+			}).then(responseHandler);
 
 			Promise.delay(500).then(t.end);
 		});

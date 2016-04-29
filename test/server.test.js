@@ -3,7 +3,7 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
-const Listener = require('../lib/listener');
+const tcpTransport = require('../lib/transport');
 
 const messagePattern = {pattern: 1};
 const messagePayload = {payload: 1};
@@ -15,7 +15,7 @@ const message = Object.freeze({
 (function messageReceivedAndHandled() {
 	const client = new net.Socket();
 
-	const subject = Listener.create();
+	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	const handler = sinon.spy(function () {
 		return Promise.resolve({});
 	});
@@ -80,7 +80,7 @@ const message = Object.freeze({
 (function messageReceivedAndNotHandled() {
 	const client = new net.Socket();
 
-	const subject = Listener.create();
+	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	subject.handler = sinon.spy(function () {
 		return Promise.resolve(false);
 	});
@@ -148,7 +148,7 @@ const message = Object.freeze({
 	const handler = sinon.spy(function () {
 		return Promise.reject(error);
 	});
-	const subject = Listener.create();
+	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	subject.setHandler(handler);
 	const messageReceivedHandler = sinon.spy();
 	const messageHandledHandler = sinon.spy();

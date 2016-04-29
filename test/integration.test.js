@@ -3,21 +3,16 @@
 const test = require('tape');
 const sinon = require('sinon');
 const oddcast = require('oddcast');
-const tcpTransport = require('../lib/oddcast-tcp-transport');
+const tcpTransport = require('../lib/transport').create();
 
 (function commandOriginatedMessage() {
 	const payload = {
 		id: 'command_success'
 	};
 
-	const readTransport = tcpTransport.listener();
-	const writeTransport = tcpTransport.emitter();
+	const channel = oddcast.requestChannel();
 
-	const receiveChannel = oddcast.requestChannel();
-	const sendChannel = oddcast.requestChannel();
-
-	const readErrorHandler = sinon.spy();
-	const writeErrorHandler = sinon.spy();
+	const errorHandler = sinon.spy();
 
 	const messageRespondHandler = sinon.spy(function () {
 		return Promise.resolve({message: 'success'});
@@ -25,37 +20,27 @@ const tcpTransport = require('../lib/oddcast-tcp-transport');
 	const messageRequestHandler = sinon.spy();
 
 	test('before all requestOriginatedMessage', function (t) {
-		readTransport.on('error', readErrorHandler);
-		writeTransport.on('error', writeErrorHandler);
+		tcpTransport.on('error', errorHandler);
 
-		readTransport.on('error', function () {
+		tcpTransport.on('error', function () {
 			t.end();
 		});
-		writeTransport.on('error', function () {
-			t.end();
-		});
-		readTransport.on('message:received', function () {
+		tcpTransport.on('message:received', function () {
 			t.end();
 		});
 
-		receiveChannel.use({}, readTransport);
-		sendChannel.use({}, writeTransport);
+		channel.use({}, tcpTransport);
 
 		// Setup the receive handler.
-		receiveChannel.respond({role: 'test', cmd: 'command:message'}, messageRespondHandler);
+		channel.respond({role: 'test', cmd: 'command:message'}, messageRespondHandler);
 
 		// Send the request.
-		sendChannel.request({role: 'test', cmd: 'command:message'}, payload).then(messageRequestHandler);
+		channel.request({role: 'test', cmd: 'command:message'}, payload).then(messageRequestHandler);
 	});
 
 	test('read error handler is not called', function (t) {
 		t.plan(1);
-		t.equal(readErrorHandler.callCount, 0);
-	});
-
-	test('write error handler is not called', function (t) {
-		t.plan(1);
-		t.equal(writeErrorHandler.callCount, 0);
+		t.equal(errorHandler.callCount, 0);
 	});
 
 	test('got message payload', function (t) {
@@ -72,8 +57,7 @@ const tcpTransport = require('../lib/oddcast-tcp-transport');
 	});
 
 	test('after all closeConnections', function (t) {
-		readTransport.close();
-		writeTransport.close();
+		tcpTransport.close();
 		t.end();
 	});
 })();

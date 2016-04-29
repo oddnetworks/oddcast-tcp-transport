@@ -3,7 +3,7 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
-const Emitter = require('../lib/emitter');
+const tcpTransport = require('../lib/transport').create({client: {host: '127.0.0.1', port: 1544}});
 
 const payload = {first: 1};
 const pattern = {role: 'test'};
@@ -15,7 +15,7 @@ const response = {val: 'TCP-Response'};
 	});
 	server.listen(1544, '127.0.0.1');
 
-	const subject = Emitter.create();
+	const subject = tcpTransport;
 
 	const messageSentHandler = sinon.spy();
 	const responseHandler = sinon.spy();

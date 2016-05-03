@@ -6,9 +6,7 @@ const oddcast = require('oddcast');
 const tcpTransport = require('../lib/transport').create();
 
 (function commandOriginatedMessage() {
-	const payload = {
-		id: 'command_success'
-	};
+	const payload = require('./payload.json');
 
 	const channel = oddcast.requestChannel();
 
@@ -44,16 +42,14 @@ const tcpTransport = require('../lib/transport').create();
 	});
 
 	test('got message payload', function (t) {
-		t.plan(2);
-		const args = messageRespondHandler.args[0][0];
-		t.ok(typeof payload.id !== 'undefined', 'payload is present');
-		t.equal(args.id, payload.id);
+		t.plan(1);
+		t.equal(payload.length, 10, 'payload is present');
 	});
 
 	test('got payload response', function (t) {
 		t.plan(1);
 		const args = messageRequestHandler.args[0][0];
-		t.equal(args.payload.message, 'success');
+		t.equal(args.message, 'success');
 	});
 
 	test('after all closeConnections', function (t) {

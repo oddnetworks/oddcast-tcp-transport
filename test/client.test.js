@@ -3,6 +3,7 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
+const JSONSocket = require('json-socket');
 const tcpTransport = require('../lib/transport').create({client: {host: '127.0.0.1', port: 1544}});
 
 const payload = {first: 1};
@@ -10,8 +11,10 @@ const pattern = {role: 'test'};
 const response = {val: 'TCP-Response'};
 
 (function sendWithNoError() {
-	const server = net.createServer(function (socket) {
-		socket.write(JSON.stringify(response));
+	const server = net.createServer();
+	server.on('connection', function (socket) {
+		socket = new JSONSocket(socket);
+		socket.sendMessage(response);
 	});
 	server.listen(1544, '127.0.0.1');
 
@@ -42,13 +45,13 @@ const response = {val: 'TCP-Response'};
 		const options = messageSentHandler.args[0][0];
 		t.deepEqual(options.pattern, pattern, 'pattern is set');
 		t.deepEqual(options.payload, payload, 'payload is set');
-		t.deepEqual(responseHandler.args[0][1], response.payload, 'response received from server');
+		t.deepEqual(responseHandler.args[0][0], response, 'response received from server');
 		t.equal(errorHandler.callCount, 0, 'error is not emitted');
 		t.end();
 	});
 
 	test('after all', function (t) {
-		subject.client.destroy();
+		subject.client._socket.destroy();
 		server.close(t.end);
 	});
 })();

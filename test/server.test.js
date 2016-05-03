@@ -3,6 +3,7 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
+const JSONSocket = require('json-socket');
 const tcpTransport = require('../lib/transport');
 
 const messagePattern = {pattern: 1};
@@ -13,7 +14,7 @@ const message = Object.freeze({
 });
 
 (function messageReceivedAndHandled() {
-	const client = new net.Socket();
+	const client = new JSONSocket(new net.Socket());
 
 	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	const handler = sinon.spy(function () {
@@ -34,7 +35,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.write(JSON.stringify(message));
+				client.sendMessage(message);
 
 				Promise.delay(100).then(t.end);
 			});
@@ -72,13 +73,13 @@ const message = Object.freeze({
 		t.equal(errorHandler.callCount, 0);
 	});
 	test('after all', function (t) {
-		client.destroy();
+		client._socket.destroy();
 		subject.server.close(t.end);
 	});
 })();
 
 (function messageReceivedAndNotHandled() {
-	const client = new net.Socket();
+	const client = new JSONSocket(new net.Socket());
 
 	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	subject.handler = sinon.spy(function () {
@@ -100,7 +101,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.write(JSON.stringify(message));
+				client.sendMessage(message);
 
 				Promise.delay(100).then(t.end);
 			});
@@ -136,13 +137,13 @@ const message = Object.freeze({
 		t.equal(errorHandler.callCount, 0);
 	});
 	test('after all', function (t) {
-		client.destroy();
+		client._socket.destroy();
 		subject.server.close(t.end);
 	});
 })();
 
 (function messageReceivedAndRejected() {
-	const client = new net.Socket();
+	const client = new JSONSocket(new net.Socket());
 
 	const error = new Error('TEST messageReceivedAndRejected');
 	const handler = sinon.spy(function () {
@@ -165,7 +166,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.write(JSON.stringify(message));
+				client.sendMessage(message);
 
 				Promise.delay(100).then(t.end);
 			});
@@ -203,7 +204,7 @@ const message = Object.freeze({
 		t.equal(errorHandler.callCount, 0);
 	});
 	test('after all', function (t) {
-		client.destroy();
+		client._socket.destroy();
 		subject.server.close(t.end);
 	});
 })();

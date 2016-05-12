@@ -3,7 +3,7 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
-const JSONSocket = require('json-socket');
+const msgpack = require('oddcast-msgpack');
 const tcpTransport = require('../lib/transport');
 
 const messagePattern = {pattern: 1};
@@ -14,11 +14,11 @@ const message = Object.freeze({
 });
 
 (function messageReceivedAndHandled() {
-	const client = new JSONSocket(new net.Socket());
+	const client = new net.Socket();
 
 	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	const handler = sinon.spy(function () {
-		return Promise.resolve({});
+		return Promise.resolve(msgpack.encodeHex({}));
 	});
 	subject.setHandler(handler);
 	const messageReceivedHandler = sinon.spy();
@@ -35,7 +35,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.sendMessage(message);
+				client.write(msgpack.encodeHex(message));
 
 				Promise.delay(100).then(t.end);
 			});
@@ -73,13 +73,13 @@ const message = Object.freeze({
 		t.equal(errorHandler.callCount, 0);
 	});
 	test('after all', function (t) {
-		client._socket.destroy();
+		client.destroy();
 		subject.server.close(t.end);
 	});
 })();
 
 (function messageReceivedAndNotHandled() {
-	const client = new JSONSocket(new net.Socket());
+	const client = new net.Socket();
 
 	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	subject.handler = sinon.spy(function () {
@@ -101,7 +101,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.sendMessage(message);
+				client.write(msgpack.encodeHex(message));
 
 				Promise.delay(100).then(t.end);
 			});
@@ -137,13 +137,13 @@ const message = Object.freeze({
 		t.equal(errorHandler.callCount, 0);
 	});
 	test('after all', function (t) {
-		client._socket.destroy();
+		client.destroy();
 		subject.server.close(t.end);
 	});
 })();
 
 (function messageReceivedAndRejected() {
-	const client = new JSONSocket(new net.Socket());
+	const client = new net.Socket();
 
 	const error = new Error('TEST messageReceivedAndRejected');
 	const handler = sinon.spy(function () {
@@ -166,7 +166,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.sendMessage(message);
+				client.write(msgpack.encodeHex(message));
 
 				Promise.delay(100).then(t.end);
 			});
@@ -204,7 +204,7 @@ const message = Object.freeze({
 		t.equal(errorHandler.callCount, 0);
 	});
 	test('after all', function (t) {
-		client._socket.destroy();
+		client.destroy();
 		subject.server.close(t.end);
 	});
 })();

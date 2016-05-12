@@ -15,7 +15,7 @@
   "homepage": "https://github.com/oddnetworks/oddcast-tcp-transport/",
   "dependencies": {
     "bluebird": "~3.1.1",
-    "json-socket": "^0.1.2"
+    "oddcast-msgpack": "^1.0.0"
   },
   "devDependencies": {
     "oddcast": "^2.0.0",

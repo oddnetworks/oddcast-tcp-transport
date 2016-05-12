@@ -12,18 +12,20 @@ const tcpTransport = require('../lib/transport').create();
 
 	const errorHandler = sinon.spy();
 
-	const messageRespondHandler = sinon.spy(function () {
+	const messageRespondHandler = sinon.spy(() => {
 		return Promise.resolve({message: 'success'});
 	});
-	const messageRequestHandler = sinon.spy();
+	const messageRequestHandler = sinon.spy(() => {
+		return Promise.resolve(true);
+	});
 
-	test('before all requestOriginatedMessage', function (t) {
+	test('before all requestOriginatedMessage', t => {
 		tcpTransport.on('error', errorHandler);
 
-		tcpTransport.on('error', function () {
+		tcpTransport.on('error', () => {
 			t.end();
 		});
-		tcpTransport.on('message:received', function () {
+		tcpTransport.on('message:received', () => {
 			t.end();
 		});
 
@@ -36,23 +38,24 @@ const tcpTransport = require('../lib/transport').create();
 		channel.request({role: 'test', cmd: 'command:message'}, payload).then(messageRequestHandler);
 	});
 
-	test('read error handler is not called', function (t) {
+	test('read error handler is not called', t => {
 		t.plan(1);
 		t.equal(errorHandler.callCount, 0);
 	});
 
-	test('got message payload', function (t) {
+	test('got message payload', t => {
 		t.plan(1);
-		t.equal(payload.length, 10, 'payload is present');
+		t.equal(messageRespondHandler.args[0][0].length, payload.length, 'payload is present');
 	});
 
-	test('got payload response', function (t) {
+	test('got payload response', t => {
 		t.plan(1);
+
 		const args = messageRequestHandler.args[0][0];
 		t.equal(args.message, 'success');
 	});
 
-	test('after all closeConnections', function (t) {
+	test('after all closeConnections', t => {
 		tcpTransport.close();
 		t.end();
 	});

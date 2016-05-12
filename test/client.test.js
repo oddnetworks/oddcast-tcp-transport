@@ -3,7 +3,7 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
-const JSONSocket = require('json-socket');
+const msgpack = require('oddcast-msgpack');
 const tcpTransport = require('../lib/transport').create({client: {host: '127.0.0.1', port: 1544}});
 
 const payload = {first: 1};
@@ -11,11 +11,10 @@ const pattern = {role: 'test'};
 const response = {val: 'TCP-Response'};
 
 (function sendWithNoError() {
-	const server = net.createServer();
-	server.on('connection', function (socket) {
-		socket = new JSONSocket(socket);
-		socket.sendMessage(response);
+	const server = net.createServer(socket => {
+		socket.write(msgpack.encodeHex(response));
 	});
+
 	server.listen(1544, '127.0.0.1');
 
 	const subject = tcpTransport;
@@ -51,7 +50,7 @@ const response = {val: 'TCP-Response'};
 	});
 
 	test('after all', function (t) {
-		subject.client._socket.destroy();
+		subject.client.destroy();
 		server.close(t.end);
 	});
 })();

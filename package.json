@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "A full featured TCP transport for Oddcast.",
   "author": "Odd Networks Inc. (http://oddnetworks.co)",
-  "main": "./lib/oddcast-tcp-transport",
+  "main": "./lib/transport",
   "scripts": {
     "lint": "xo",
-    "test": "xo && tape 'test/**/*.test.js' | tap-spec"
+    "test": "xo && tape 'test/**/*-test.js' | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/oddnetworks/oddcast-tcp-transport/",
   "dependencies": {
-    "bluebird": "~3.1.1"
+    "bluebird": "~3.1.1",
+    "oddcast-msgpack": "^1.0.0"
   },
   "devDependencies": {
     "oddcast": "^2.0.0",

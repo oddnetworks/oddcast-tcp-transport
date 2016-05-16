@@ -3,7 +3,8 @@ const net = require('net');
 const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
-const Listener = require('../lib/listener');
+const msgpack = require('oddcast-msgpack');
+const tcpTransport = require('../lib/transport');
 
 const messagePattern = {pattern: 1};
 const messagePayload = {payload: 1};
@@ -15,9 +16,9 @@ const message = Object.freeze({
 (function messageReceivedAndHandled() {
 	const client = new net.Socket();
 
-	const subject = Listener.create();
+	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	const handler = sinon.spy(function () {
-		return Promise.resolve({});
+		return Promise.resolve(msgpack.encodeHex({}));
 	});
 	subject.setHandler(handler);
 	const messageReceivedHandler = sinon.spy();
@@ -34,7 +35,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.write(JSON.stringify(message));
+				client.write(msgpack.encodeHex(message));
 
 				Promise.delay(100).then(t.end);
 			});
@@ -80,7 +81,7 @@ const message = Object.freeze({
 (function messageReceivedAndNotHandled() {
 	const client = new net.Socket();
 
-	const subject = Listener.create();
+	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	subject.handler = sinon.spy(function () {
 		return Promise.resolve(false);
 	});
@@ -100,7 +101,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.write(JSON.stringify(message));
+				client.write(msgpack.encodeHex(message));
 
 				Promise.delay(100).then(t.end);
 			});
@@ -148,7 +149,7 @@ const message = Object.freeze({
 	const handler = sinon.spy(function () {
 		return Promise.reject(error);
 	});
-	const subject = Listener.create();
+	const subject = tcpTransport.create({server: {host: '127.0.0.1', port: 1544}});
 	subject.setHandler(handler);
 	const messageReceivedHandler = sinon.spy();
 	const messageHandledHandler = sinon.spy();
@@ -165,7 +166,7 @@ const message = Object.freeze({
 
 		subject.on('server:listening', function () {
 			client.on('connect', function () {
-				client.write(JSON.stringify(message));
+				client.write(msgpack.encodeHex(message));
 
 				Promise.delay(100).then(t.end);
 			});

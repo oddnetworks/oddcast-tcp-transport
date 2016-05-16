@@ -12,6 +12,13 @@
     "type": "git",
     "url": "https://github.com/oddnetworks/oddcast-tcp-transport.git"
   },
+  "keywords": [
+    "odd networks",
+    "oddworks",
+    "oddcast",
+    "messagepack",
+    "msgpack"
+  ],
   "homepage": "https://github.com/oddnetworks/oddcast-tcp-transport/",
   "dependencies": {
     "bluebird": "~3.1.1",
@@ -26,6 +33,12 @@
   },
   "bugs": {
     "url": "https://github.com/oddnetworks/oddcast-tcp-transport/issues"
+  },
+  "xo": {
+    "envs": [
+      "node",
+      "es6"
+    ]
   },
   "license": "MIT"
 }

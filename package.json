@@ -6,7 +6,7 @@
   "main": "./lib/transport",
   "scripts": {
     "lint": "xo",
-    "test": "xo && tape 'test/**/*.test.js' | tap-spec"
+    "test": "xo && tape 'test/**/*-test.js' | tap-spec"
   },
   "repository": {
     "type": "git",

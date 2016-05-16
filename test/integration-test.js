@@ -1,13 +1,15 @@
 'use strict';
 
+const Promise = require('bluebird');
 const test = require('tape');
 const sinon = require('sinon');
 const oddcast = require('oddcast');
-const tcpTransport = require('../lib/transport').create();
+const tcpTransport = require('../lib/transport');
 
-(function commandOriginatedMessage() {
-	const payload = require('./payload.json');
+const payload = require('./payload.json');
 
+(function requestOriginatedMessage() {
+	const transport = tcpTransport.create();
 	const channel = oddcast.requestChannel();
 
 	const errorHandler = sinon.spy();
@@ -20,18 +22,18 @@ const tcpTransport = require('../lib/transport').create();
 	});
 
 	test('before all requestOriginatedMessage', t => {
-		tcpTransport.on('error', errorHandler);
+		transport.on('error', errorHandler);
 
-		tcpTransport.on('error', () => {
+		transport.on('error', () => {
 			t.end();
 		});
-		tcpTransport.on('message:received', () => {
+		transport.on('message:received', () => {
 			t.end();
 		});
 
-		channel.use({}, tcpTransport);
+		channel.use({}, transport);
 
-		// Setup the receive handler.
+		// Setup the respond handler.
 		channel.respond({role: 'test', cmd: 'command:message'}, messageRespondHandler);
 
 		// Send the request.
@@ -56,7 +58,7 @@ const tcpTransport = require('../lib/transport').create();
 	});
 
 	test('after all closeConnections', t => {
-		tcpTransport.close();
+		transport.close();
 		t.end();
 	});
 })();

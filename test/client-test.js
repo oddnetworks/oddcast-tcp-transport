@@ -25,7 +25,7 @@ const response = {val: 'TCP-Response'};
 
 	test('before all sendWithNoError', t => {
 		subject.on('message:sent', messageSentHandler);
-		subject.on('client:error', errorHandler);
+		subject.on('error', errorHandler);
 
 		subject.on('client:connect', () => {
 			subject.write({
@@ -41,12 +41,12 @@ const response = {val: 'TCP-Response'};
 
 	test('write() is called', t => {
 		t.plan(5);
-		t.equal(messageSentHandler.callCount, 1, 'message:sent emitted once');
+		t.equal(messageSentHandler.callCount, 1, 'transport emitted "message:sent" once');
 		const sentMessage = messageSentHandler.args[0][0];
 		t.deepEqual(sentMessage.pattern, pattern, 'pattern is set');
 		t.deepEqual(sentMessage.payload, payload, 'payload is set');
 		t.deepEqual(responseHandler.args[0][0], response, 'response received from server');
-		t.equal(errorHandler.callCount, 0, 'no client:error emitted');
+		t.equal(errorHandler.callCount, 0, 'transport did not emit "error"');
 	});
 
 	test('after all', t => {
@@ -69,7 +69,7 @@ const response = {val: 'TCP-Response'};
 
 	test('before all sendWithNoError', t => {
 		subject.on('message:sent', messageSentHandler);
-		subject.on('client:error', errorHandler);
+		subject.on('error', errorHandler);
 		subject.client.on('error', clientErrorListener);
 
 		subject.on('client:connect', () => {
@@ -85,7 +85,7 @@ const response = {val: 'TCP-Response'};
 		t.plan(3);
 		t.equal(messageSentHandler.callCount, 0, 'transport did not emit "message:sent"');
 		t.equal(clientErrorListener.callCount, 1, 'client emitted "error"');
-		t.equal(errorHandler.callCount, 1, 'transport emitted "client:error"');
+		t.equal(errorHandler.callCount, 1, 'transport emitted "error"');
 	});
 
 	test('after all', t => {

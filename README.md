@@ -3,7 +3,7 @@ Oddcast TCP Transport
 
 [![Build Status](https://travis-ci.org/oddnetworks/oddcast-tcp-transport.svg?branch=master)](https://travis-ci.org/oddnetworks/oddcast-tcp-transport)
 
-An request/command transport for [Oddcast](https://github.com/oddnetworks/oddcast) using TCP.
+A request transport for [Oddcast](https://github.com/oddnetworks/oddcast) over TCP.
 
 Copyright and License
 ---------------------

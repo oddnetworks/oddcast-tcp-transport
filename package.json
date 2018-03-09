@@ -1,43 +1,43 @@
 {
-  "name": "oddcast-tcp-transport",
-  "version": "1.0.0",
-  "description": "A request transport for Oddcast over TCP",
-  "author": "Odd Networks Inc. (http://www.oddnetworks.com)",
-  "main": "./lib/transport",
-  "scripts": {
-    "lint": "xo",
-    "test": "xo && tape 'test/**/*-test.js' | tap-spec"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/oddnetworks/oddcast-tcp-transport.git"
-  },
-  "keywords": [
-    "odd networks",
-    "oddworks",
-    "oddcast",
-    "tcp"
-  ],
-  "homepage": "https://github.com/oddnetworks/oddcast-tcp-transport/",
-  "dependencies": {
-    "bluebird": "~3.1.1",
-    "oddcast-msgpack": "^1.0.0"
-  },
-  "devDependencies": {
-    "oddcast": "^2.0.0",
-    "sinon": "~1.17.2",
-    "tap-spec": "^4.1.1",
-    "tape": "~4.4.0",
-    "xo": "~0.12.1"
-  },
-  "bugs": {
-    "url": "https://github.com/oddnetworks/oddcast-tcp-transport/issues"
-  },
-  "xo": {
-    "envs": [
-      "node",
-      "es6"
-    ]
-  },
-  "license": "MIT"
+	"name": "oddcast-tcp-transport",
+	"version": "1.0.0",
+	"description": "A request transport for Oddcast over TCP",
+	"author": "Odd Networks Inc. (http://www.oddnetworks.com)",
+	"main": "./lib/transport",
+	"scripts": {
+		"lint": "xo",
+		"test": "xo && tape 'test/**/*-test.js' | tap-spec"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://gitlab.com/oddnetworks/oddworks/oddcast-tcp-transport.git"
+	},
+	"keywords": [
+		"odd networks",
+		"oddworks",
+		"oddcast",
+		"tcp"
+	],
+	"homepage": "https://gitlab.com/oddnetworks/oddworks/oddcast-tcp-transport/",
+	"dependencies": {
+		"bluebird": "~3.1.1",
+		"oddcast-msgpack": "^1.0.0"
+	},
+	"devDependencies": {
+		"oddcast": "^2.0.0",
+		"sinon": "~1.17.2",
+		"tap-spec": "^4.1.1",
+		"tape": "~4.4.0",
+		"xo": "~0.12.1"
+	},
+	"bugs": {
+		"url": "https://gitlab.com/oddnetworks/oddworks/oddcast-tcp-transport/issues"
+	},
+	"xo": {
+		"envs": [
+			"node",
+			"es6"
+		]
+	},
+	"license": "MIT"
 }

@@ -37,7 +37,10 @@
 		"envs": [
 			"node",
 			"es6"
-		]
+		],
+		"rules": {
+			"no-use-extend-native/no-use-extend-native": 0
+		}
 	},
 	"license": "MIT"
 }
